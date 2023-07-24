@@ -1,0 +1,8 @@
+HEADER    NONAME 11-Nov-20                                              NONE   1
+TITLE                                                                   NONE   2
+COMPND    lithium chloride                                              NONE   3
+AUTHOR    Apache                                                        NONE   4
+REVDAT   1  11-Nov-20     0                                             NONE   5
+ATOM      1 Li           0      -7.242  -0.000  -0.000  0.00  0.00          Li+1
+ATOM      2 Cl           0       1.418   0.000   0.000  0.00  0.00          Cl-1
+END                                                                     NONE   8

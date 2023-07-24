@@ -1,0 +1,41 @@
+#
+# fixed the simulation cell
+#
+
+filetype pdb
+output simulation.pdb
+tolerance 2.0
+
+# electrolyte is confined inbetween the two electrodes
+structure water.pdb
+ seed 1996353
+ number 400
+ center
+  inside box -0.5 0.5 -25.0  11.5 11.0 25.0
+end structure
+
+structure LiCl.pdb
+ seed 1996489
+ number 8
+ center
+  inside box -0.5 0.5 -25.0  11.5 11.0 25.0
+end structure
+
+#fixed electrodes 
+
+structure graphene.pdb
+ number 1
+ fixed 0 0 -25.0 0 0 0
+end structure 
+
+structure graphene.pdb
+ number 1
+ fixed 0 0 25.0 0 0 0
+end structure 
+
+
+
+
+
+
+

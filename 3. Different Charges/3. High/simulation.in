@@ -1,0 +1,105 @@
+# ------------------------ INITIALIZATION ----------------------------
+
+units               real    
+dimension           3  
+boundary            p p p 
+atom_style          full
+
+
+# ----------------------- ATOM DEFINITION ----------------------------
+read_data           simulation.data
+
+# ------------------------ FORCE FIELDS ------------------------------
+
+pair_style          lj/cut/coul/long 10.0
+bond_style          harmonic
+angle_style         harmonic
+dihedral_style      harmonic
+kspace_style        pppm 1.0e-6
+
+pair_coeff   1   1         0.1200   3.29630             # CG-CG
+pair_coeff   1   2         0.1188   3.85665             # CG-Cl
+pair_coeff   1   3         0.0000   1.64815             # CG-H*
+pair_coeff   1   4         0.0468   2.71115             # CG-Li
+pair_coeff   2   5         0.1366   3.23090             # CG-O*
+pair_coeff   2   2         0.1178   4.41700             # Cl-Cl
+pair_coeff   2   3         0.0000   2.20850             # Cl-H*
+pair_coeff   2   4         0.0464   3.27150             # Cl-Li
+pair_coeff   2   5         0.1353   3.79125             # Cl-O*
+pair_coeff   3   3         0.0000   0.00000             # H*-H*
+pair_coeff   3   4         0.0000   1.06300             # H*-Li
+pair_coeff   3   5         0.0000   1.58275             # H*-O*
+pair_coeff   4   4         0.0183   2.12600             # Li-Li
+pair_coeff   4   5         0.0533   2.64575             # Li-O*
+pair_coeff   5   5         0.1554   3.16550             # O*-O*
+
+
+bond_coeff  1              469.00   1.4                 #CG-CG
+bond_coeff  2              554.135  1.0                 #H*-O*
+
+angle_coeff 1              85.0     120                 #CG-CG-CG
+angle_coeff 2              45.7696  109.47              #H*-O*-H*
+
+dihedral_coeff 1           5.3    -1    2               #CG-CG-CG-CG
+
+# ------------------------- SETTINGS ---------------------------------
+
+neighbor            2 bin
+neigh_modify every 1 delay 0 check yes
+group electrode type 1
+group solvent   type 2 3 4 5
+group H2O_group type 3 5
+group Li_group type 4
+group Cl_group type 2
+
+ 
+thermo_style        multi
+thermo              1000
+restart 5000 restart
+
+run_style           verlet
+timestep            1.2
+fix 0 electrode setforce 0.0 0.0 0.0
+
+##HEATING
+
+fix 1 solvent nvt temp 298.0 373.0 100.0
+run 10000
+unfix 1
+fix 1 solvent nvt temp 373.0 373.0 100.0
+run 10000
+unfix 1
+fix 1 solvent nvt temp 373.0 298.0 100.0
+run 10000
+unfix 1
+
+##EQUILIBRATION
+
+fix 1 solvent nvt temp 298.0 298.0 100.0
+dump 1 all custom 5000 dump.all.* id mol type q x y z
+dump_modify 1 sort id
+
+run 20000
+
+
+##PRODUCTION
+
+
+dump 2 all xyz 100 lmp.xyz
+
+compute  density_num_1   solvent   chunk/atom   bin/1d   z   lower   0.1
+fix 2 solvent ave/chunk  1  100  10000  density_num_1  density/number  file  density_number_bin_0.1.density
+
+compute density_num_2   Li_group   chunk/atom   bin/1d   z   lower   0.1
+fix 3 Li_group ave/chunk 1 100 10000 density_num_2 density/number file densityLi.dens
+
+compute density_num_4   Cl_group   chunk/atom   bin/1d   z   lower 0.1
+fix 4 Cl_group ave/chunk 1 100 10000 density_num_4 density/number file densityCl.dens
+
+compute density_num_5   H2O_group   chunk/atom   bin/1d   z   lower 0.1
+fix 5 H2O_group ave/chunk 1 100 10000 density_num_5 density/number file densityH2O.dens
+
+run 30000
+
+
+
