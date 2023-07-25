@@ -16,6 +16,14 @@ I used the [EAM potential by Adams and Ercolessi](https://openkim.org/id/EAM_Dyn
 
 
 # Methodology:
+Software and other tools
+PACKMOL - Initial configuration for Molecular Dynamics  Simulations by packing optimization 
+VMD  -   Visual Molecular Dynamics  
+VESTA  - Visualisation for Electronic Structural Analysis
+LAMMPS  -  Large-scale Atomic/Molecular Massively Parallel
+OVITO  -   Open-Source visualization software 
+
+
  <img src="assets/Picture1.jpg" width="600">
 
 Initial structure was created using packmol. The structure of the supercapacitor  shown in the above video can be depicted as below.
@@ -37,14 +45,6 @@ The Python script [plot_energy.py](plot_energy.py) can be used to plot the varia
  <img src="assets/Numberdensity.jpg" width="600">
 
 I used [OVITO](https://www.ovito.org/) to visulalize MD tragectories of this simulation. A great introductory tutorial about OVITO is [available here](https://youtu.be/z4rogk8pdt4). [VMD](https://www.ks.uiuc.edu/Research/vmd/vmd-1.9.3/) is another very useful visualization tool. 
-
-
-
-
-
-
-
-
 
 I hope that this information and the LAMMPS files will be useful for those who are interested in modeling of material interfaces. Good luck!
 
